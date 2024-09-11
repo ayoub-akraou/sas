@@ -346,6 +346,88 @@ void rechercher()
     }
 }
 
+void tri_croissante(struct Etudiant arr[], int n)
+{
+    int min_indice;         // Smallest element index
+    struct Etudiant temp; // Swap variable
+
+    // Outer loop: up to second-last element
+    for (int i = 0; i < n - 1; i++)
+    {
+        min_indice = i; // Start with current index
+
+        // Inner loop: find smallest in unsorted part
+        for (int j = i + 1; j < n; j++)
+        {
+            if (arr[j].note_generale < arr[min_indice].note_generale)
+            {
+                min_indice = j; // Update smallest index
+            }
+        }
+
+        // Swap
+        temp = arr[i];
+        arr[i] = arr[min_indice];
+        arr[min_indice] = temp;
+    }
+}
+void tri_decroissante(struct Etudiant arr[], int n)
+{
+         // Outer, Inner loop counters
+    int max_indice;         // Smallest element index
+    struct Etudiant temp; // Swap variable
+
+    // Outer loop: up to second-last element
+    for (int i = 0; i < n - 1; i++)
+    {
+        max_indice = i; // Start with current index
+
+        // Inner loop: find smallest in unsorted part
+        for (int j = i + 1; j < n; j++)
+        {
+            if (arr[j].note_generale > arr[max_indice].note_generale)
+            {
+                max_indice = j; // Update smallest index
+            }
+        }
+
+        // Swap
+        temp = arr[i];
+        arr[i] = arr[max_indice];
+        arr[max_indice] = temp;
+    }
+}
+
+void trier()
+{
+    int choix;
+    printf("****  saisir votre choix  ****\n");
+    printf("[1] Tri alphabétique des étudiants en fonction de leur nom.\n");
+    printf("[2] Tri par moyenne générale decroissante.\n");
+    printf("[3] Tri par moyenne générale croissante.\n");
+    printf("[3] Tri des étudiants selon leur statut de réussite.\n");
+    scanf("%d", &choix);
+    getchar();
+    switch (choix)
+    {
+    case 1:
+
+        break;
+    case 2:
+        tri_decroissante(etudiants, size);
+        afficher();
+        break;
+    case 3:
+        tri_croissante(etudiants, size);
+        afficher();
+
+        break;
+
+    default:
+        break;
+    }
+}
+
 void afficher_menu()
 {
     int choix;
@@ -385,9 +467,9 @@ void afficher_menu()
     case 7:
         rechercher();
         break;
-        // case 8:
-        //     trier();
-        //     break;
+    case 8:
+        trier();
+        break;
 
     default:
         printf("Saisir un choix valide: entre 1 et 8\n");
