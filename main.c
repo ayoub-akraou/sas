@@ -287,6 +287,65 @@ void afficher_les_statistiques()
     }
 }
 
+void rechercher()
+{
+    int choix;
+    printf("****  saisir votre choix  ****\n");
+    printf("[1] Rechercher un etudiant par son nom.\n");
+    printf("[2] Afficher la liste des etudiants inscrits dans un departement specifique\n");
+    scanf("%d", &choix);
+    getchar();
+    switch (choix)
+    {
+    case 1:
+    {
+        char prenom[100];
+        printf("saisir le prenom: ");
+        scanf("%[^\n]", prenom);
+        getchar();
+        char nom[100];
+        printf("saisir le nom: ");
+        scanf("%[^\n]", nom);
+        getchar();
+        for (int i = 0; i < size; i++)
+        {
+            if (strcmp(etudiants[i].prenom, prenom) == 0 && strcmp(etudiants[i].nom, nom) == 0)
+            {
+                printf("-----------------\n");
+                printf("id: %d.\n", etudiants[i].id);
+                printf("nom: %s.\n", etudiants[i].nom);
+                printf("prenom: %s.\n", etudiants[i].prenom);
+                printf("date de naissance: %s.\n", etudiants[i].date_de_naissance);
+                printf("departement: %s.\n", etudiants[i].departement);
+                printf("note generale: %.2f.\n", etudiants[i].note_generale);
+                printf("-----------------\n");
+            }
+        }
+    }
+
+    break;
+    case 2:
+    {
+        char departement[100];
+        printf("Saisir le departement:");
+        scanf("%s", &departement);
+        int z = 1;
+        for (int j = 0; j < size; j++)
+        {
+            if (strcmp(departement, etudiants[j].departement) == 0)
+            {
+                printf("%d %s %s.\n", z, etudiants[j].nom, etudiants[j].prenom);
+                z++;
+            }
+        }
+    }
+    break;
+
+    default:
+        break;
+    }
+}
+
 void afficher_menu()
 {
     int choix;
@@ -323,9 +382,9 @@ void afficher_menu()
     case 6:
         afficher_les_statistiques();
         break;
-        // case 7:
-        //     rechercher();
-        //     break;
+    case 7:
+        rechercher();
+        break;
         // case 8:
         //     trier();
         //     break;
