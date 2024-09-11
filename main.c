@@ -29,6 +29,7 @@ int size_departements = 0;
 void obtenir_departement()
 {
     memset(departements, 0, sizeof(departements));
+    size_departements = 0;
     for (int i = 0; i < size; i++)
     {
         int deja_existe = 0;
@@ -105,6 +106,7 @@ void ajouter()
         ajouter_un_etudiant();
         break;
     case 2:
+    {
         int n;
         printf("saisir le nombre des etudiants.\n");
         scanf("%d", &n);
@@ -115,7 +117,8 @@ void ajouter()
             printf("#Etudiant %d:\n", i + 1);
             ajouter_un_etudiant();
         }
-        break;
+    }
+    break;
 
     default:
         printf("choix non valide!");
@@ -160,6 +163,7 @@ void modifier()
         scanf("%f", &etudiants[indice].note_generale);
         getchar();
     }
+    obtenir_departement();
 }
 
 void supprimer()
@@ -170,9 +174,11 @@ void supprimer()
         for (int i = indice; i < size - 1; i++)
         {
             etudiants[i] = etudiants[i + 1];
+            etudiants[i].id = i;
         }
         size--;
     }
+    obtenir_departement();
 }
 
 void afficher()
@@ -183,12 +189,73 @@ void afficher()
     {
         printf("---------------------\n");
         printf("# Etudiant %d:\n", i + 1);
+        printf(" id: %i\n", etudiants[i].id);
         printf(" Nom: %s\n", etudiants[i].nom);
         printf(" Prenom: %s\n", etudiants[i].prenom);
         printf(" Date de naissance: %s\n", etudiants[i].date_de_naissance);
         printf(" Departement: %s\n", etudiants[i].departement);
         printf(" Note generale: %.2f\n", etudiants[i].note_generale);
         printf("---------------------\n");
+    }
+}
+
+void calculer_moyenne_generale()
+{
+    float somme_moyennes_generale = 0;
+    for (int i = 0; i < size_departements; i++)
+    {
+        printf("Le moyenne generale du departement %s: %.2f\n", departements[i].departement, departements[i].moyenne_generale);
+        somme_moyennes_generale += departements[i].moyenne_generale;
+    }
+    printf("=> Le moyenne generale d universite: %.2f\n", somme_moyennes_generale / size_departements);
+}
+
+void afficher_les_statistiques()
+{
+    int choix;
+    printf("**** saisir votre choix  ****\n");
+    printf("[1] Afficher le nombre total d etudiants inscrits.\n");
+    printf("[2] Afficher le nombre d etudiants dans chaque département.\n");
+    printf("[3] Afficher les etudiants ayant une moyenne generale superieure a un certain seuil.\n");
+    printf("[4] Afficher les 3 etudiants ayant les meilleures notes.\n");
+    printf("[5] Afficher le nombre d etudiants ayant réussi dans chaque departement.\n");
+    scanf("%d", &choix);
+    getchar();
+
+    switch (choix)
+    {
+    case 1:
+        printf("#Le nombre total d etudiants: %d\n", size);
+        break;
+    case 2:
+        for (int i = 0; i < size_departements; i++)
+        {
+            printf("=> Le departement de %s: %d.\n", departements[i].departement, departements[i].compteur);
+        }
+
+        break;
+    case 3:
+    {
+        float seuil;
+        scanf("%f", &seuil);
+        getchar();
+        for (int i = 0; i < size; i++)
+        {
+            if (etudiants[i].note_generale > seuil)
+                printf("%d %s %s: %.2f\n", i + 1, etudiants[i].nom, etudiants[i].prenom, etudiants[i].note_generale);
+        }
+    }
+
+    break;
+    case 4:
+
+        break;
+    case 5:
+
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -207,7 +274,6 @@ void afficher_menu()
 
     scanf("%i", &choix);
     getchar();
-    printf("choix: %i\n\n", choix);
 
     switch (choix)
     {
@@ -223,12 +289,12 @@ void afficher_menu()
     case 4:
         afficher();
         break;
-        // case 5:
-        //     calculer_moyenne_generale();
-        //     break;
-        // case 6:
-        //     afficher_les_statistiques();
-        //     break;
+    case 5:
+        calculer_moyenne_generale();
+        break;
+    case 6:
+        afficher_les_statistiques();
+        break;
         // case 7:
         //     rechercher();
         //     break;
