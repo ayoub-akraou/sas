@@ -22,7 +22,7 @@ struct Departement
 
 struct Etudiant etudiants[200];
 int size_etudiants = 0;
-// int id = 0;
+int id = 1;
 struct Etudiant reussites[200];
 int size_reussites = 0;
 
@@ -31,6 +31,7 @@ int size_departements = 0;
 
 void obtenir_departement()
 {
+    // reset departements comme vide
     memset(departements, 0, sizeof(departements));
     size_departements = 0;
     for (int i = 0; i < size_etudiants; i++)
@@ -73,14 +74,14 @@ void obtenir_departement()
 
 void ajouter_un_etudiant()
 {
-    etudiants[size_etudiants].id = size_etudiants;
+    etudiants[size_etudiants].id = id++;
     printf("saisir le nom:\n");
     scanf("%[^\n]", etudiants[size_etudiants].nom);
     getchar();
     printf("saisir le prenom:\n");
     scanf("%[^\n]", etudiants[size_etudiants].prenom);
     getchar();
-    printf("saisir la date de naissance:\n");
+    printf("saisir la date de naissance  JJ/MM/AAAA:\n");
     scanf("%[^\n]", etudiants[size_etudiants].date_de_naissance);
     getchar();
     printf("saisir le departement (PC, CH, MATH, BIO, INFO, ECO, PHILO..):\n");
@@ -124,7 +125,7 @@ void ajouter()
     break;
 
     default:
-        printf("choix non valide!");
+        printf("choix non valide!\n");
         break;
     }
     obtenir_departement();
@@ -156,7 +157,7 @@ void modifier()
         printf("saisir le prenom:\n");
         scanf("%[^\n]", etudiants[indice].prenom);
         getchar();
-        printf("saisir la date de naissance:\n");
+        printf("saisir la date de naissance  JJ/MM/AAAA:\n");
         scanf("%[^\n]", etudiants[indice].date_de_naissance);
         getchar();
         printf("saisir le departement (PC, CH, MATH, BIO, INFO, ECO, PHILO..):\n");
@@ -185,7 +186,6 @@ void supprimer()
         for (int i = indice; i < size_etudiants - 1; i++)
         {
             etudiants[i] = etudiants[i + 1];
-            etudiants[i].id = i;
         }
         size_etudiants--;
         obtenir_departement();
@@ -194,206 +194,235 @@ void supprimer()
 
 void afficher(struct Etudiant etudiants[200], int size_etudiants)
 {
-    if (size_etudiants == 0)
-        printf("===> Aucun etudiant trouve!\n");
-    printf("-------------------------------------------------------------------------\n");
-    printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
-           "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
-    printf("-------------------------------------------------------------------------\n");
-
-    for (int i = 0; i < size_etudiants; i++)
+    if (size_etudiants > 0)
     {
-        printf("| %-4d | %-10s | %-10s | %-12s | %-12s | %-6.2f |\n",
-               etudiants[i].id,
-               etudiants[i].nom,
-               etudiants[i].prenom,
-               etudiants[i].date_de_naissance,
-               etudiants[i].departement,
-               etudiants[i].note_generale);
-    }
 
-    printf("-------------------------------------------------------------------------\n");
+        printf("-------------------------------------------------------------------------\n");
+        printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
+               "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
+        printf("-------------------------------------------------------------------------\n");
+
+        for (int i = 0; i < size_etudiants; i++)
+        {
+            printf("| %-4d | %-10s | %-10s | %-12s | %-12s | %-6.2f |\n",
+                   etudiants[i].id,
+                   etudiants[i].nom,
+                   etudiants[i].prenom,
+                   etudiants[i].date_de_naissance,
+                   etudiants[i].departement,
+                   etudiants[i].note_generale);
+        }
+
+        printf("-------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        printf("===> Aucun etudiant trouve!\n");
+    }
 }
 
 void calculer_moyenne_generale()
 {
-    float somme_moyennes_generale = 0;
-    for (int i = 0; i < size_departements; i++)
+    if (size_etudiants != 0)
     {
-        printf("La moyenne generale du departement %s: %.2f\n", departements[i].departement, departements[i].moyenne_generale);
-        somme_moyennes_generale += departements[i].moyenne_generale;
+        float somme_moyennes_generale = 0;
+        for (int i = 0; i < size_departements; i++)
+        {
+            printf("La moyenne generale du departement %s: %.2f\n", departements[i].departement, departements[i].moyenne_generale);
+            somme_moyennes_generale += departements[i].moyenne_generale;
+        }
+        printf("=> La moyenne generale d universite: %.2f\n", somme_moyennes_generale / size_departements);
     }
-    printf("=> La moyenne generale d universite: %.2f\n", somme_moyennes_generale / size_departements);
+    else
+    {
+        printf("******* aucun etudiants trouve ********\n");
+    }
 }
 
 void afficher_les_statistiques()
 {
-    int choix;
-    printf("**** saisir votre choix  ****\n");
-    printf("[1] Afficher le nombre total d etudiants inscrits.\n");
-    printf("[2] Afficher le nombre d etudiants dans chaque departement.\n");
-    printf("[3] Afficher les etudiants ayant une moyenne generale superieure a un certain seuil.\n");
-    printf("[4] Afficher les 3 etudiants ayant les meilleures notes.\n");
-    printf("[5] Afficher le nombre d etudiants ayant reussi dans chaque departement.\n");
-    scanf("%d", &choix);
-    getchar();
-
-    switch (choix)
+    if (size_etudiants == 0)
     {
-    case 1:
-        printf("#Le nombre total d etudiants: %d\n", size_etudiants);
-        break;
-    case 2:
-        for (int i = 0; i < size_departements; i++)
-        {
-            printf("=> Le departement %s: %d.\n", departements[i].departement, departements[i].compteur);
-        }
-
-        break;
-    case 3:
-    {
-        printf("saisir la seuil:\n");
-        float seuil;
-        scanf("%f", &seuil);
-        getchar();
-        printf("-------------------------------------------------------------------------\n");
-        printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
-               "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
-        printf("-------------------------------------------------------------------------\n");
-
-        for (int i = 0; i < size_etudiants; i++)
-        {
-            if (etudiants[i].note_generale >= seuil)
-            {
-
-                printf("| %-4d | %-10s | %-10s | %-12s | %-12s | %-6.2f |\n",
-                       etudiants[i].id,
-                       etudiants[i].nom,
-                       etudiants[i].prenom,
-                       etudiants[i].date_de_naissance,
-                       etudiants[i].departement,
-                       etudiants[i].note_generale);
-            }
-        }
-        printf("-------------------------------------------------------------------------\n");
+        printf("****** aucun etudiants trouve *******\n");
     }
-
-    break;
-    case 4:
+    else
     {
-        struct Etudiant copie_etudiants[size_etudiants];
-        for (int i = 0; i < size_etudiants; i++)
-        {
-            copie_etudiants[i] = etudiants[i];
-        }
 
-        int i = 1;
-        printf("-------------------------------------------------------------------------\n");
-        printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
-               "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
-        printf("-------------------------------------------------------------------------\n");
-        while (i <= 3)
+        int choix;
+        printf("**** saisir votre choix  ****\n");
+        printf("[1] Afficher le nombre total d etudiants inscrits.\n");
+        printf("[2] Afficher le nombre d etudiants dans chaque departement.\n");
+        printf("[3] Afficher les etudiants ayant une moyenne generale superieure a un certain seuil.\n");
+        printf("[4] Afficher les 3 etudiants ayant les meilleures notes.\n");
+        printf("[5] Afficher le nombre d etudiants ayant reussi dans chaque departement.\n");
+        scanf("%d", &choix);
+        getchar();
+
+        switch (choix)
         {
-            int max_indice = 0;
-            for (int j = 1; j < size_etudiants; j++)
+        case 1:
+            printf("#Le nombre total d etudiants: %d\n", size_etudiants);
+            break;
+        case 2:
+            for (int i = 0; i < size_departements; i++)
             {
-                if (copie_etudiants[max_indice].note_generale < copie_etudiants[j].note_generale)
+                printf("=> Le departement %s: %d.\n", departements[i].departement, departements[i].compteur);
+            }
+
+            break;
+        case 3:
+        {
+            printf("saisir la seuil:\n");
+            float seuil;
+            scanf("%f", &seuil);
+            getchar();
+            printf("-------------------------------------------------------------------------\n");
+            printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
+                   "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
+            printf("-------------------------------------------------------------------------\n");
+
+            for (int i = 0; i < size_etudiants; i++)
+            {
+                if (etudiants[i].note_generale >= seuil)
                 {
-                    max_indice = j;
+
+                    printf("| %-4d | %-10s | %-10s | %-12s | %-12s | %-6.2f |\n",
+                           etudiants[i].id,
+                           etudiants[i].nom,
+                           etudiants[i].prenom,
+                           etudiants[i].date_de_naissance,
+                           etudiants[i].departement,
+                           etudiants[i].note_generale);
                 }
             }
-            copie_etudiants[max_indice].note_generale = 0;
-
-            printf("| %-4d | %-10s | %-10s | %-12s | %-12s | %-6.2f |\n",
-                   etudiants[max_indice].id,
-                   etudiants[max_indice].nom,
-                   etudiants[max_indice].prenom,
-                   etudiants[max_indice].date_de_naissance,
-                   etudiants[max_indice].departement,
-                   etudiants[max_indice].note_generale);
-
-            i++;
+            printf("-------------------------------------------------------------------------\n");
         }
-        printf("-------------------------------------------------------------------------\n");
-    }
-    break;
-    case 5:
-        printf("Le nombre d etudiants ayant reussi dans chaque departement: \n");
-        for (int i = 0; i < size_departements; i++)
+
+        break;
+        case 4:
         {
-            printf("#departement %s: %d\n", departements[i].departement, departements[i].reussites);
+            struct Etudiant copie_etudiants[size_etudiants];
+            for (int i = 0; i < size_etudiants; i++)
+            {
+                copie_etudiants[i] = etudiants[i];
+            }
+
+            int i = 1;
+            printf("-------------------------------------------------------------------------\n");
+            printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
+                   "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
+            printf("-------------------------------------------------------------------------\n");
+            while (i <= 3 && i <= size_etudiants)
+            {
+                int max_indice = 0;
+                for (int j = 1; j < size_etudiants; j++)
+                {
+                    if (copie_etudiants[max_indice].note_generale < copie_etudiants[j].note_generale)
+                    {
+                        max_indice = j;
+                    }
+                }
+                copie_etudiants[max_indice].note_generale = 0;
+
+                printf("| %-4d | %-10s | %-10s | %-12s | %-12s | %-6.2f |\n",
+                       etudiants[max_indice].id,
+                       etudiants[max_indice].nom,
+                       etudiants[max_indice].prenom,
+                       etudiants[max_indice].date_de_naissance,
+                       etudiants[max_indice].departement,
+                       etudiants[max_indice].note_generale);
+
+                i++;
+            }
+            printf("-------------------------------------------------------------------------\n");
         }
-
         break;
+        case 5:
+            printf("Le nombre d etudiants ayant reussi dans chaque departement: \n");
+            for (int i = 0; i < size_departements; i++)
+            {
+                printf("#departement %s: %d\n", departements[i].departement, departements[i].reussites);
+            }
 
-    default:
-        printf("choix non valide!");
-        break;
+            break;
+
+        default:
+            printf("choix non valide!");
+            break;
+        }
     }
 }
-// here
+
 void rechercher()
 {
-    int choix;
-    printf("****  saisir votre choix  ****\n");
-    printf("[1] Rechercher un etudiant par son nom.\n");
-    printf("[2] Afficher la liste des etudiants inscrits dans un departement specifique\n");
-    scanf("%d", &choix);
-    getchar();
-    switch (choix)
+    if (size_etudiants > 0)
     {
-    case 1:
-    {
-        char prenom[100];
-        printf("saisir le prenom: ");
-        scanf("%[^\n]", prenom);
+        int choix;
+        printf("****  saisir votre choix  ****\n");
+        printf("[1] Rechercher un etudiant par son nom.\n");
+        printf("[2] Afficher la liste des etudiants inscrits dans un departement specifique\n");
+        scanf("%d", &choix);
         getchar();
-        char nom[100];
-        printf("saisir le nom: ");
-        scanf("%[^\n]", nom);
-        getchar();
-        int trouve = 0;
-        for (int i = 0; i < size_etudiants; i++)
+        switch (choix)
         {
-            if (strcmp(etudiants[i].prenom, prenom) == 0 && strcmp(etudiants[i].nom, nom) == 0)
+        case 1:
+        {
+            char prenom[100];
+            printf("saisir le prenom: ");
+            scanf("%[^\n]", prenom);
+            getchar();
+            char nom[100];
+            printf("saisir le nom: ");
+            scanf("%[^\n]", nom);
+            getchar();
+            int trouve = 0;
+            for (int i = 0; i < size_etudiants; i++)
             {
-                printf("-----------------\n");
-                printf("id: %d.\n", etudiants[i].id);
-                printf("nom: %s.\n", etudiants[i].nom);
-                printf("prenom: %s.\n", etudiants[i].prenom);
-                printf("date de naissance: %s.\n", etudiants[i].date_de_naissance);
-                printf("departement: %s.\n", etudiants[i].departement);
-                printf("note generale: %.2f.\n", etudiants[i].note_generale);
-                printf("-----------------\n");
-                trouve = 1;
+                if (strcmp(etudiants[i].prenom, prenom) == 0 && strcmp(etudiants[i].nom, nom) == 0)
+                {
+                    printf("-----------------\n");
+                    printf("id: %d.\n", etudiants[i].id);
+                    printf("nom: %s.\n", etudiants[i].nom);
+                    printf("prenom: %s.\n", etudiants[i].prenom);
+                    printf("date de naissance: %s.\n", etudiants[i].date_de_naissance);
+                    printf("departement: %s.\n", etudiants[i].departement);
+                    printf("note generale: %.2f.\n", etudiants[i].note_generale);
+                    printf("-----------------\n");
+                    trouve = 1;
+                }
+            }
+            if (trouve == 0)
+            {
+                printf("**** aucun etudiant trouve avec ce nom! ****\n");
             }
         }
-        if(trouve == 0) {
-            printf("**** aucun etudiant trouve avec ce nom! ****\n");
-        }
-    }
 
-    break;
-    case 2:
-    {
-        char departement[100];
-        printf("Saisir le departement (PC, CH, MATH, BIO, INFO, ECO, PHILO..):");
-        scanf("%s", &departement);
-        int z = 1;
-        for (int j = 0; j < size_etudiants; j++)
-        {
-            if (strcmp(departement, etudiants[j].departement) == 0)
-            {
-                printf("%d %s %s.\n", z, etudiants[j].nom, etudiants[j].prenom);
-                z++;
-            }
-        }
-    }
-    break;
-
-    default:
-        printf("choix non valide!");
         break;
+        case 2:
+        {
+            char departement[100];
+            printf("Saisir le departement (PC, CH, MATH, BIO, INFO, ECO, PHILO..):");
+            scanf("%s", &departement);
+            int z = 1;
+            for (int j = 0; j < size_etudiants; j++)
+            {
+                if (strcmp(departement, etudiants[j].departement) == 0)
+                {
+                    printf("%d %s %s.\n", z, etudiants[j].nom, etudiants[j].prenom);
+                    z++;
+                }
+            }
+        }
+        break;
+
+        default:
+            printf("choix non valide!");
+            break;
+        }
+    }
+    else
+    {
+        printf("****** aucun etudiants trouve *******\n");
     }
 }
 
@@ -529,9 +558,11 @@ void afficher_menu()
     printf("[6] Afficher les statistiques\n");
     printf("[7] Rechercher un etudiant.\n");
     printf("[8] Trier les etudiants.\n");
+    printf("[0] Quitter.\n");
     printf("---------------------------------------\n");
 
     scanf("%i", &choix);
+    int quitter = 0;
     getchar();
 
     switch (choix)
@@ -560,35 +591,46 @@ void afficher_menu()
     case 8:
         trier();
         break;
+    case 0:
+        quitter = 1;
+        break;
 
     default:
         printf("Saisir un choix valide: entre 1 et 8\n");
         break;
     }
 
+    if (quitter == 1)
+        return;
     afficher_menu();
 }
 
 int main()
 {
-    struct Etudiant e1 = {0, "akraou", "ayoub", "02/05/2001", "INFO", 16};
+    struct Etudiant e1 = {1, "akraou", "ayoub", "02/05/2001", "INFO", 16};
     etudiants[size_etudiants] = e1;
     size_etudiants++;
-    struct Etudiant e2 = {1, "alaoui", "karim", "11/12/2003", "MATH", 12.5};
+    id++;
+    struct Etudiant e2 = {2, "alaoui", "karim", "11/12/2003", "MATH", 12.5};
     etudiants[size_etudiants] = e2;
     size_etudiants++;
-    struct Etudiant e3 = {2, "badri", "yakout", "09/11/2000", "PC", 8};
+    id++;
+    struct Etudiant e3 = {3, "badri", "yakout", "09/11/2000", "PC", 8};
     etudiants[size_etudiants] = e3;
     size_etudiants++;
-    struct Etudiant e4 = {3, "boutalbi", "mohamed", "13/09/2001", "INFO", 14};
+    id++;
+    struct Etudiant e4 = {4, "boutalbi", "mohamed", "13/09/2001", "INFO", 14};
     etudiants[size_etudiants] = e4;
     size_etudiants++;
-    struct Etudiant e5 = {4, "jeddar", "safaa", "29/10/1997", "MATH", 19};
+    id++;
+    struct Etudiant e5 = {5, "jeddar", "safaa", "29/10/1997", "MATH", 19};
     etudiants[size_etudiants] = e5;
     size_etudiants++;
-    struct Etudiant e6 = {5, "noumri", "oualid", "05/07/1999", "INFO", 9.5};
+    id++;
+    struct Etudiant e6 = {6, "noumri", "oualid", "05/07/1999", "INFO", 9.5};
     etudiants[size_etudiants] = e6;
     size_etudiants++;
+    id++;
     obtenir_departement();
     afficher_menu();
     return 0;
