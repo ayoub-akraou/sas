@@ -22,7 +22,7 @@ struct Departement
 
 struct Etudiant etudiants[200];
 int size_etudiants = 0;
-
+// int id = 0;
 struct Etudiant reussites[200];
 int size_reussites = 0;
 
@@ -198,7 +198,7 @@ void afficher(struct Etudiant etudiants[200], int size_etudiants)
         printf("===> Aucun etudiant trouve!\n");
     printf("-------------------------------------------------------------------------\n");
     printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
-           "ID", "Nom", "Prenom", "né a", "Departement", "Note");
+           "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
     printf("-------------------------------------------------------------------------\n");
 
     for (int i = 0; i < size_etudiants; i++)
@@ -258,7 +258,7 @@ void afficher_les_statistiques()
         getchar();
         printf("-------------------------------------------------------------------------\n");
         printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
-               "ID", "Nom", "Prenom", "né a", "Departement", "Note");
+               "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
         printf("-------------------------------------------------------------------------\n");
 
         for (int i = 0; i < size_etudiants; i++)
@@ -290,7 +290,7 @@ void afficher_les_statistiques()
         int i = 1;
         printf("-------------------------------------------------------------------------\n");
         printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
-               "ID", "Nom", "Prenom", "né a", "Departement", "Note");
+               "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
         printf("-------------------------------------------------------------------------\n");
         while (i <= 3)
         {
@@ -318,7 +318,7 @@ void afficher_les_statistiques()
     }
     break;
     case 5:
-        printf("Le nombre d etudiants ayant réussi dans chaque département: \n");
+        printf("Le nombre d etudiants ayant reussi dans chaque departement: \n");
         for (int i = 0; i < size_departements; i++)
         {
             printf("#departement %s: %d\n", departements[i].departement, departements[i].reussites);
@@ -352,6 +352,7 @@ void rechercher()
         printf("saisir le nom: ");
         scanf("%[^\n]", nom);
         getchar();
+        int trouve = 0;
         for (int i = 0; i < size_etudiants; i++)
         {
             if (strcmp(etudiants[i].prenom, prenom) == 0 && strcmp(etudiants[i].nom, nom) == 0)
@@ -364,7 +365,11 @@ void rechercher()
                 printf("departement: %s.\n", etudiants[i].departement);
                 printf("note generale: %.2f.\n", etudiants[i].note_generale);
                 printf("-----------------\n");
+                trouve = 1;
             }
+        }
+        if(trouve == 0) {
+            printf("**** aucun etudiant trouve avec ce nom! ****\n");
         }
     }
 
@@ -457,10 +462,10 @@ void trier()
 {
     int choix;
     printf("****  saisir votre choix  ****\n");
-    printf("[1] Tri alphabétique des étudiants en fonction de leur nom.\n");
-    printf("[2] Tri par moyenne générale decroissante.\n");
-    printf("[3] Tri par moyenne générale croissante.\n");
-    printf("[4] Tri des étudiants selon leur statut de réussite.\n");
+    printf("[1] Tri alphabetique des etudiants en fonction de leur nom.\n");
+    printf("[2] Tri par moyenne generale decroissante.\n");
+    printf("[3] Tri par moyenne generale croissante.\n");
+    printf("[4] Tri des etudiants selon leur statut de reussite.\n");
     scanf("%d", &choix);
     getchar();
     if (size_etudiants == 0)
@@ -486,7 +491,7 @@ void trier()
             tri_decroissante(etudiants, size_etudiants);
             printf("-------------------------------------------------------------------------\n");
             printf("| %-4s | %-10s | %-10s | %-13s | %-12s | %-6s |\n",
-                   "ID", "Nom", "Prenom", "né a", "Departement", "Note");
+                   "ID", "Nom", "Prenom", "ne a", "Departement", "Note");
             printf("-------------------------------------------------------------------------\n");
 
             for (int i = 0; i < size_etudiants; i++)
@@ -514,6 +519,7 @@ void trier()
 void afficher_menu()
 {
     int choix;
+    printf("---------------------------------------\n");
     printf("****  Veuiller saisir votre choix  ****\n");
     printf("[1] Ajouter un etudiant.\n");
     printf("[2] Modifier un etudiant.\n");
@@ -523,6 +529,7 @@ void afficher_menu()
     printf("[6] Afficher les statistiques\n");
     printf("[7] Rechercher un etudiant.\n");
     printf("[8] Trier les etudiants.\n");
+    printf("---------------------------------------\n");
 
     scanf("%i", &choix);
     getchar();
@@ -564,7 +571,7 @@ void afficher_menu()
 
 int main()
 {
-    struct Etudiant e1 = {0, "akraou", "ayoub", "02/05/2001", "PC", 16};
+    struct Etudiant e1 = {0, "akraou", "ayoub", "02/05/2001", "INFO", 16};
     etudiants[size_etudiants] = e1;
     size_etudiants++;
     struct Etudiant e2 = {1, "alaoui", "karim", "11/12/2003", "MATH", 12.5};
@@ -576,7 +583,7 @@ int main()
     struct Etudiant e4 = {3, "boutalbi", "mohamed", "13/09/2001", "INFO", 14};
     etudiants[size_etudiants] = e4;
     size_etudiants++;
-    struct Etudiant e5 = {4, "jeddar", "safaa", "29/10/1997", "INFO", 19};
+    struct Etudiant e5 = {4, "jeddar", "safaa", "29/10/1997", "MATH", 19};
     etudiants[size_etudiants] = e5;
     size_etudiants++;
     struct Etudiant e6 = {5, "noumri", "oualid", "05/07/1999", "INFO", 9.5};
